@@ -95,8 +95,17 @@ void cbt::show_help()
 
 int main(int argc, char *argv[])
 {
-    cbt::Result load_args_result = cbt::load_args(argc, argv);
-    cbt::Result process_args_result = cbt::process_args();
+    if (cbt::load_args(argc, argv) != cbt::Result::SUCCESS)
+    {
+        cbt::log(cbt::LogType::ERROR, "Failed to load args.");
+        return 1;
+    }
+
+    if (cbt::process_args() != cbt::Result::SUCCESS)
+    {
+        cbt::log(cbt::LogType::ERROR, "Failed to process args.");
+        return 1;
+    }
 
     if (cbt::Flags::help)
     {
@@ -106,9 +115,7 @@ int main(int argc, char *argv[])
 
     cbt::log(cbt::LogType::INFO, "Compiling...");
 
-    cbt::Result compile_result = cbt::build();
-
-    if (compile_result != cbt::Result::SUCCESS)
+    if (cbt::build() != cbt::Result::SUCCESS)
     {
         cbt::log(cbt::LogType::ERROR, "Something went wrong!");
     }
