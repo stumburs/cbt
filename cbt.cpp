@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
     if (cbt::build() != cbt::Result::SUCCESS)
     {
         cbt::log(cbt::LogType::ERROR, "Something went wrong!");
+        return 1;
     }
 
     cbt::log(cbt::LogType::SUCCESS, "Successfully compiled!");
