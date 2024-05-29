@@ -1,5 +1,7 @@
 #pragma once
 #include "cbt_config.h"
+#include <deque>
+#include <functional>
 
 namespace cbt
 {
@@ -9,5 +11,42 @@ namespace cbt
         FAIL,
     };
 
+    enum class LogType
+    {
+        SUCCESS,
+        INFO,
+        WARNING,
+        ERROR,
+    };
+
+    std::deque<std::string> args;
+
+    namespace Flags
+    {
+        std::string cbt_location = "";
+        bool help = false;
+    }
+
+    constexpr size_t hash_djb2a(const std::string_view sv)
+    {
+        size_t hash{5381};
+        for (auto c : sv)
+        {
+            hash = ((hash << 5) + hash) ^ c;
+        }
+        return hash;
+    }
+
+    namespace Hashes
+    {
+        // const std::string help_str = "help";
+        constexpr size_t help = hash_djb2a("-help");
+    }
+
+    Result load_args(int argc, char *argv[]);
+    Result process_args();
+    void log(LogType log_type, std::string text);
+    std::string get_next_arg();
     Result build();
+    void show_help();
 };
