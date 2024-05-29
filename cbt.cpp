@@ -37,6 +37,9 @@ cbt::Result cbt::process_args()
         case cbt::Hashes::help:
             cbt::Flags::help = true;
             break;
+        case cbt::Hashes::run:
+            cbt::Flags::run = true;
+            break;
 
         default:
             cbt::log(cbt::LogType::WARNING, "Unknown Flag: " + arg);
@@ -52,21 +55,31 @@ void cbt::log(LogType log_type, std::string text)
     switch (log_type)
     {
     case cbt::LogType::SUCCESS:
-        std::cout << "\x1B[32m[SUCCESS]\033[0m\t";
+        if (cbt_config::console_colors)
+            std::cout << "\x1B[32;1m";
+        std::cout << "[SUCCESS]";
         break;
     case cbt::LogType::INFO:
-        std::cout << "[INFO]\t";
+        if (cbt_config::console_colors)
+            std::cout << "\x1B[39;1m";
+        std::cout << "[INFO]";
         break;
     case cbt::LogType::WARNING:
-        std::cout << "\x1B[33m[WARNING]\033[0m\t";
+        if (cbt_config::console_colors)
+            std::cout << "\x1B[33;1m";
+        std::cout << "[WARNING]";
         break;
     case cbt::LogType::ERROR:
-        std::cout << "\x1B[31m[ERROR]\033[0m\t";
+        if (cbt_config::console_colors)
+            std::cout << "\x1B[31;1m";
+        std::cout << "[ERROR]";
         break;
     default:
         break;
     }
-    std::cout << std::setw(20) << text << std::endl;
+    if (cbt_config::console_colors)
+        std::cout << "\x1B[0m";
+    std::cout << ' ' << text << std::endl;
 }
 
 std::string cbt::get_next_arg()
@@ -122,4 +135,10 @@ int main(int argc, char *argv[])
     }
 
     cbt::log(cbt::LogType::SUCCESS, "Successfully compiled!");
+
+    if (cbt::Flags::run)
+    {
+        std::system(cbt_config::target.c_str());
+        return 0;
+    }
 }

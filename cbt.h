@@ -25,6 +25,7 @@ namespace cbt
     {
         std::string cbt_location = "";
         bool help = false;
+        bool run = false;
     }
 
     constexpr size_t hash_djb2a(const std::string_view sv)
@@ -41,6 +42,7 @@ namespace cbt
     {
         // const std::string help_str = "help";
         constexpr size_t help = hash_djb2a("-help");
+        constexpr size_t run = hash_djb2a("-r");
     }
 
     Result load_args(int argc, char *argv[]);
