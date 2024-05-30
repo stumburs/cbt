@@ -40,6 +40,9 @@ cbt::Result cbt::process_args()
         case cbt::Hashes::run:
             cbt::Flags::run = true;
             break;
+        case cbt::Hashes::show_compile_command:
+            cbt::Flags::show_compile_command = true;
+            break;
 
         default:
             cbt::log(cbt::LogType::WARNING, "Unknown Flag: " + arg);
@@ -96,14 +99,30 @@ std::string cbt::get_next_arg()
 
 cbt::Result cbt::build()
 {
-    std::string compile_command = cbt_config::cc + " -o" + cbt_config::target + ' ' + cbt_config::src;
-    Result compile_result = (Result)std::system(compile_command.c_str());
-    return compile_result;
+    if (std::system(cbt::compile_command.c_str()) != 0)
+    {
+        return cbt::Result::FAIL;
+    }
+    return cbt::Result::SUCCESS;
 }
 
 void cbt::show_help()
 {
     log(cbt::LogType::INFO, "Refer to the source code or the README.md");
+}
+
+void cbt::show_compile_command()
+{
+    log(cbt::LogType::INFO, "Compile command: " + cbt::compile_command);
+}
+
+std::string cbt::create_compile_command()
+{
+    return cbt_config::cc +
+           add_space_if_not_empty(cbt_config::src) +
+           add_space_if_not_empty(cbt_config::cflags) +
+           add_space_if_not_empty(cbt_config::ldflags) +
+           " -o " + cbt_config::target;
 }
 
 cbt::Result cbt::run(const std::string &path)
@@ -132,6 +151,14 @@ int main(int argc, char *argv[])
     if (cbt::Flags::help)
     {
         cbt::show_help();
+        return 0;
+    }
+
+    cbt::compile_command = cbt::create_compile_command();
+
+    if (cbt::Flags::show_compile_command)
+    {
+        cbt::show_compile_command();
         return 0;
     }
 

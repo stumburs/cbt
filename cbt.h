@@ -26,6 +26,7 @@ namespace cbt
         std::string cbt_location = "";
         bool help = false;
         bool run = false;
+        bool show_compile_command = false;
     }
 
     constexpr size_t hash_djb2a(const std::string_view sv)
@@ -42,7 +43,10 @@ namespace cbt
     {
         constexpr size_t help = hash_djb2a("-help");
         constexpr size_t run = hash_djb2a("-r");
+        constexpr size_t show_compile_command = hash_djb2a("-cmd");
     }
+
+    std::string compile_command = "";
 
     Result load_args(int argc, char *argv[]);
     Result process_args();
@@ -50,5 +54,13 @@ namespace cbt
     std::string get_next_arg();
     Result build();
     void show_help();
+    void show_compile_command();
+    std::string create_compile_command();
     Result run(const std::string &path);
+
+    // Helper functions
+    std::string add_space_if_not_empty(const std::string &str)
+    {
+        return str.empty() ? "" : ' ' + str;
+    }
 };
