@@ -50,13 +50,14 @@ namespace cbt
 
     Result load_args(int argc, char *argv[]);
     Result process_args();
-    void log(LogType log_type, std::string text);
+    void log(LogType log_type, const std::string &text);
     std::string get_next_arg();
     Result build();
     void show_help();
     void show_compile_command();
     std::string create_compile_command();
     Result run(const std::string &path);
+    std::vector<std::string> get_files_in_directory(const std::string &path);
 
     // Helper functions
     std::string add_space_if_not_empty(const std::string &str)

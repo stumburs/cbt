@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <functional>
+#include <filesystem>
 
 cbt::Result cbt::load_args(int argc, char *argv[])
 {
@@ -53,7 +54,7 @@ cbt::Result cbt::process_args()
     return cbt::Result::SUCCESS;
 }
 
-void cbt::log(LogType log_type, std::string text)
+void cbt::log(LogType log_type, const std::string &text)
 {
     switch (log_type)
     {
@@ -118,11 +119,20 @@ void cbt::show_compile_command()
 
 std::string cbt::create_compile_command()
 {
-    return cbt_config::cc +
-           add_space_if_not_empty(cbt_config::src) +
-           add_space_if_not_empty(cbt_config::cflags) +
-           add_space_if_not_empty(cbt_config::ldflags) +
-           " -o " + cbt_config::target;
+    std::string cmd = "";
+    cmd += cbt_config::cc;
+
+    for (const auto &file : cbt::get_files_in_directory(cbt_config::src))
+    {
+        cmd += add_space_if_not_empty(file);
+    }
+
+    cmd +=
+        add_space_if_not_empty(cbt_config::cflags) +
+        add_space_if_not_empty(cbt_config::ldflags) +
+        " -o " + cbt_config::target;
+
+    return cmd;
 }
 
 cbt::Result cbt::run(const std::string &path)
@@ -132,6 +142,44 @@ cbt::Result cbt::run(const std::string &path)
         return cbt::Result::FAIL;
     }
     return cbt::Result::SUCCESS;
+}
+
+std::vector<std::string> cbt::get_files_in_directory(const std::string &path)
+{
+    std::vector<std::string> files;
+    if (path.ends_with(".cpp"))
+    {
+        files.push_back(path);
+        return files;
+    }
+
+    try
+    {
+        for (const auto &entry : std::filesystem::directory_iterator(path))
+        {
+            if (entry.is_regular_file())
+            {
+                auto path = entry.path();
+                if (path.extension() == ".c" || path.extension() == ".cpp" ||
+                    path.extension() == ".cc" || path.extension() == ".cxx" ||
+                    path.extension() == ".h" || path.extension() == ".hpp" ||
+                    path.extension() == ".hxx")
+                {
+                    files.push_back(path.string());
+                }
+            }
+        }
+    }
+    catch (const std::filesystem::filesystem_error &e)
+    {
+        cbt::log(cbt::LogType::ERROR, std::string("Filesystem error: ", e.what()));
+    }
+    catch (const std::exception &e)
+    {
+        cbt::log(cbt::LogType::ERROR, std::string("Something went wrong: ", e.what()));
+    }
+
+    return files;
 }
 
 int main(int argc, char *argv[])
