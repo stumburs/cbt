@@ -106,6 +106,15 @@ void cbt::show_help()
     log(cbt::LogType::INFO, "Refer to the source code or the README.md");
 }
 
+cbt::Result cbt::run(const std::string &path)
+{
+    if (std::system(path.c_str()) != 0)
+    {
+        return cbt::Result::FAIL;
+    }
+    return cbt::Result::SUCCESS;
+}
+
 int main(int argc, char *argv[])
 {
     if (cbt::load_args(argc, argv) != cbt::Result::SUCCESS)
@@ -138,7 +147,11 @@ int main(int argc, char *argv[])
 
     if (cbt::Flags::run)
     {
-        std::system(cbt_config::target.c_str());
+        if (cbt::run(cbt_config::target) != cbt::Result::SUCCESS)
+        {
+            cbt::log(cbt::LogType::ERROR, "Failed to execute program: " + cbt_config::target);
+            return 1;
+        }
         return 0;
     }
 }

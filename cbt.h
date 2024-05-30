@@ -40,7 +40,6 @@ namespace cbt
 
     namespace Hashes
     {
-        // const std::string help_str = "help";
         constexpr size_t help = hash_djb2a("-help");
         constexpr size_t run = hash_djb2a("-r");
     }
@@ -51,4 +50,5 @@ namespace cbt
     std::string get_next_arg();
     Result build();
     void show_help();
+    Result run(const std::string &path);
 };
