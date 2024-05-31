@@ -22,7 +22,7 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
         std::string cc = "g++";             // Your compiler of choice (cc, gcc, g++, clang, etc)
         std::string src = "main.cpp";       // Your source file/folder of .c/.cpp files.
         std::string cflags = "-O3";         // Any CFLAGS such as '-I./include -O3 -Wall -pedantic'
-        std::string ldflags = "";           // Any CFLAGS such as '-I./include -O3 -Wall -pedantic'
+        std::string ldflags = "";           // Any LDFLAGS such as '-I./include -O3 -Wall -pedantic'
         std::string target = "main.exe";    // Your target executable name.
 
         // Enable console output colors
