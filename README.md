@@ -30,8 +30,8 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
     };
     ```
 
-    > [!NOTE]
-    > This software is unfinished. Instead of `std::string`'s there's a plan to use some kind of array to configure multiple parameters easier.
+> [!NOTE]
+> This software is unfinished. Instead of `std::string`'s there's a plan to use some kind of array to configure multiple parameters easier.
 
 4.  Compile the build tool.
 
@@ -39,8 +39,8 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
     > g++ -o cbt .\cbt.cpp -std=c++20
     ```
 
-    > [!NOTE]
-    > As this project is written in C++, you have to use a C++ compiler to build it, even if you want to use the tool for C projects. Furthermore, you must use C++20.
+> [!NOTE]
+> As this project is written in C++, you have to use a C++ compiler to build it, even if you want to use the tool for C projects. Furthermore, you must use C++20.
 
 5.  Run the build tool to build your project.
 
