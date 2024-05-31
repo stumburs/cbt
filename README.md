@@ -36,7 +36,7 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
 4.  Compile the build tool.
 
     ```console
-    g++ -o cbt .\cbt.cpp -std=c++20
+    g++ -o cbt ./cbt.cpp -std=c++20
     ```
 
 > [!NOTE]
