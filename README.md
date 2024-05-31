@@ -4,7 +4,7 @@ Simple C and C++ build tool.
 
 ## What is it?
 
-cbt is a basic build tool/system for C/C++ where you only require a C++ compiler - no build system required like Make, CMake, etc. It's a vaguely inspired by [nobuild](https://github.com/tsoding/nobuild), and not quite as useful as this tool was primarly made for fun and learning.
+cbt is a basic build tool/system for C/C++ where you only require a C++ compiler - no build system required like Make, CMake, etc. It's vaguely inspired by [nobuild](https://github.com/tsoding/nobuild), and not quite as useful as this tool was primarly made for fun and learning.
 
 ## Quick Start
 
