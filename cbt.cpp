@@ -122,15 +122,25 @@ std::string cbt::create_compile_command()
     std::string cmd = "";
     cmd += cbt_config::cc;
 
-    for (const auto &file : cbt::get_files_in_directory(cbt_config::src))
+    // Add srcs
+    for (const auto &file : cbt::get_all_src_files(cbt_config::src))
     {
         cmd += add_space_if_not_empty(file);
     }
 
-    cmd +=
-        add_space_if_not_empty(cbt_config::cflags) +
-        add_space_if_not_empty(cbt_config::ldflags) +
-        " -o " + cbt_config::target;
+    // Add CFLAGS
+    for (const auto &cflag : cbt_config::cflags)
+    {
+        cmd += add_space_if_not_empty(cflag);
+    }
+
+    // Add LDFLAGS
+    for (const auto &ldflag : cbt_config::ldflags)
+    {
+        cmd += add_space_if_not_empty(ldflag);
+    }
+
+    cmd += " -o " + cbt_config::target;
 
     return cmd;
 }
@@ -144,42 +154,51 @@ cbt::Result cbt::run(const std::string &path)
     return cbt::Result::SUCCESS;
 }
 
-std::vector<std::string> cbt::get_files_in_directory(const std::string &path)
+std::vector<std::string> cbt::get_all_src_files(const std::vector<std::string> &directories)
 {
-    std::vector<std::string> files;
-    if (path.ends_with(".cpp"))
-    {
-        files.push_back(path);
-        return files;
-    }
+    std::vector<std::string> extensions = {".c", ".cpp", ".cc", ".cxx", ".h", ".hpp", ".hxx"};
+    std::vector<std::filesystem::path> paths;
 
-    try
+    for (const auto &dir : directories)
     {
-        for (const auto &entry : std::filesystem::directory_iterator(path))
+        if (!std::filesystem::exists(dir))
         {
-            if (entry.is_regular_file())
+            cbt::log(cbt::LogType::WARNING, std::string("Couldn't find path: \'" + dir + '\''));
+            continue;
+        }
+        if (std::filesystem::is_directory(dir))
+        {
+            for (std::filesystem::recursive_directory_iterator i(dir), end; i != end; ++i)
             {
-                auto path = entry.path();
-                if (path.extension() == ".c" || path.extension() == ".cpp" ||
-                    path.extension() == ".cc" || path.extension() == ".cxx" ||
-                    path.extension() == ".h" || path.extension() == ".hpp" ||
-                    path.extension() == ".hxx")
+                if (!std::filesystem::is_directory(i->path()))
                 {
-                    files.push_back(path.string());
+                    if (std::find(extensions.begin(), extensions.end(), i->path().extension().string()) != extensions.end())
+                    {
+                        paths.push_back(i->path().string());
+                    }
                 }
             }
         }
-    }
-    catch (const std::filesystem::filesystem_error &e)
-    {
-        cbt::log(cbt::LogType::ERROR, std::string("Filesystem error: ", e.what()));
-    }
-    catch (const std::exception &e)
-    {
-        cbt::log(cbt::LogType::ERROR, std::string("Something went wrong: ", e.what()));
+        else
+        {
+            if (std::find(extensions.begin(), extensions.end(), dir.substr(dir.find_last_of("."))) != extensions.end())
+            {
+                paths.push_back(dir);
+            }
+        }
     }
 
-    return files;
+    // Remove duplicate paths
+    std::sort(paths.begin(), paths.end());
+    paths.erase(std::unique(paths.begin(), paths.end()), paths.end());
+
+    // Convert paths to strings
+    std::vector<std::string> str_paths;
+    for (const auto &dir : paths)
+    {
+        str_paths.push_back(dir.string());
+    }
+    return str_paths;
 }
 
 int main(int argc, char *argv[])

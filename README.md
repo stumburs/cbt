@@ -15,15 +15,19 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
     ```cpp
     #pragma once
     #include <string>
+    #include <vector>
 
     namespace cbt_config
     {
+        using paths = std::vector<std::string>;
+        using flags = std::vector<std::string>;
+
         // Compilation
-        std::string cc = "g++";             // Your compiler of choice (cc, gcc, g++, clang, etc)
-        std::string src = "main.cpp";       // Your source file/folder of .c/.cpp files.
-        std::string cflags = "-O3";         // Any CFLAGS such as '-I./include -O3 -Wall -pedantic'
-        std::string ldflags = "";           // Any LDFLAGS such as '-L./lib -lm'
-        std::string target = "main.exe";    // Your target executable name.
+        std::string cc = "g++";                   // Your compiler of choice (cc, gcc, g++, clang, etc)
+        paths src = {"main.cpp", "./other_srcs"}; // Your source files/folders of .c/.cpp files.
+        flags cflags = {"-I./include", "-O3"};    // Any CFLAGS such as '-I./include -O3 -Wall -pedantic'
+        flags ldflags = {"-L./lib"};              // Any LDFLAGS such as '-L./lib -lm'
+        std::string target = "main.exe";          // Your target executable name.
 
         // Enable console output colors
         bool console_colors = true;
@@ -31,9 +35,9 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
     ```
 
 > [!NOTE]
-> This software is unfinished. Instead of `std::string`'s there's a plan to use some kind of array to configure multiple parameters easier.
+> `paths` recursively interates through all directories within given folders, however `flags`, does not support this functionality yet. If your include folder has nested directories, you have to specify each one.
 
-4.  Compile the build tool.
+1.  Compile the build tool.
 
     ```console
     g++ -o cbt ./cbt.cpp -std=c++20
