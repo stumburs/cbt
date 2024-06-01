@@ -37,7 +37,7 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
 > [!NOTE]
 > `paths` recursively interates through all directories within given folders.
 
-1.  Compile the build tool.
+4.  Compile the build tool.
 
     ```console
     g++ -o cbt ./cbt.cpp -std=c++20
