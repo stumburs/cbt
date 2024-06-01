@@ -35,7 +35,7 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
     ```
 
 > [!NOTE]
-> `paths` recursively interates through all directories within given folders, however `flags`, does not support this functionality yet. If your include folder has nested directories, you have to specify each one.
+> `paths` recursively interates through all directories within given folders.
 
 1.  Compile the build tool.
 
