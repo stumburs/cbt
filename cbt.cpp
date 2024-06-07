@@ -270,6 +270,16 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Run post-build command
+    if (!cbt_config::post_build_command.empty())
+    {
+        if (cbt::run_cmd(cbt_config::post_build_command) != cbt::Result::SUCCESS)
+        {
+            cbt::log(cbt::LogType::ERROR, "Failed to execute post-build command: \'" + cbt_config::post_build_command + "\'");
+            return 1;
+        }
+    }
+
     cbt::log(cbt::LogType::SUCCESS, "Successfully compiled!");
 
     if (cbt::Flags::run || cbt_config::run_after_compiling)
@@ -281,12 +291,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Run post-build command
-    if (!cbt_config::post_build_command.empty())
+    // Run post-run command
+    if (!cbt_config::post_run_command.empty())
     {
-        if (cbt::run_cmd(cbt_config::post_build_command) != cbt::Result::SUCCESS)
+        if (cbt::run_cmd(cbt_config::post_run_command) != cbt::Result::SUCCESS)
         {
-            cbt::log(cbt::LogType::ERROR, "Failed to execute post-build command: \'" + cbt_config::post_build_command + "\'");
+            cbt::log(cbt::LogType::ERROR, "Failed to execute post-run command: \'" + cbt_config::post_run_command + "\'");
             return 1;
         }
     }

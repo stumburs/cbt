@@ -21,4 +21,5 @@ namespace cbt_config
     // Custom commands
     std::string pre_build_command = "";  // Custom command to run before build
     std::string post_build_command = ""; // Custom command to run after build
+    std::string post_run_command = "";   // Custom command to run after executing (if enabled)
 };
