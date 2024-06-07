@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 
     cbt::log(cbt::LogType::SUCCESS, "Successfully compiled!");
 
-    if (cbt::Flags::run)
+    if (cbt::Flags::run || cbt_config::run_after_compiling)
     {
         if (cbt::run(cbt_config::target) != cbt::Result::SUCCESS)
         {

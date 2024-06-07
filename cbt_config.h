@@ -16,4 +16,6 @@ namespace cbt_config
 
     // Enable console output colors
     bool console_colors = true;
+    // Automatically run program after compiling
+    bool run_after_compiling = false;
 };
