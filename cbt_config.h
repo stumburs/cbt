@@ -14,8 +14,11 @@ namespace cbt_config
     flags ldflags = {};              // Any LDFLAGS such as '-L./lib -lm'
     std::string target = "main.exe"; // Your target executable name.
 
-    // Enable console output colors
-    bool console_colors = true;
-    // Automatically run program after compiling
-    bool run_after_compiling = false;
+    // Features
+    bool console_colors = true;       // Enable console output colors (not supported on all terminals)
+    bool run_after_compiling = false; // Automatically run program after compiling
+
+    // Custom commands
+    std::string pre_build_command = "";  // Custom command to run before build
+    std::string post_build_command = ""; // Custom command to run after build
 };

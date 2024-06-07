@@ -58,7 +58,7 @@ namespace cbt
     void show_help();
     void show_compile_command();
     std::string create_compile_command();
-    Result run(const std::string &path);
+    Result run_cmd(const std::string &path);
     std::vector<std::string> get_all_src_files(const std::vector<std::string> &directories);
     Result clean();
 

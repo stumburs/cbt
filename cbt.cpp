@@ -148,9 +148,9 @@ std::string cbt::create_compile_command()
     return cmd;
 }
 
-cbt::Result cbt::run(const std::string &path)
+cbt::Result cbt::run_cmd(const std::string &cmd)
 {
-    if (std::system(path.c_str()) != 0)
+    if (std::system(cmd.c_str()) != 0)
     {
         return cbt::Result::FAIL;
     }
@@ -252,6 +252,16 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    // Run pre-build command
+    if (!cbt_config::pre_build_command.empty())
+    {
+        if (cbt::run_cmd(cbt_config::pre_build_command) != cbt::Result::SUCCESS)
+        {
+            cbt::log(cbt::LogType::ERROR, "Failed to execute pre-build command: \'" + cbt_config::pre_build_command + "\'");
+            return 1;
+        }
+    }
+
     cbt::log(cbt::LogType::INFO, "Compiling...");
 
     if (cbt::build() != cbt::Result::SUCCESS)
@@ -264,11 +274,22 @@ int main(int argc, char *argv[])
 
     if (cbt::Flags::run || cbt_config::run_after_compiling)
     {
-        if (cbt::run(cbt_config::target) != cbt::Result::SUCCESS)
+        if (cbt::run_cmd(cbt_config::target) != cbt::Result::SUCCESS)
         {
             cbt::log(cbt::LogType::ERROR, "Failed to execute program: " + cbt_config::target);
             return 1;
         }
-        return 0;
     }
+
+    // Run post-build command
+    if (!cbt_config::post_build_command.empty())
+    {
+        if (cbt::run_cmd(cbt_config::post_build_command) != cbt::Result::SUCCESS)
+        {
+            cbt::log(cbt::LogType::ERROR, "Failed to execute post-build command: \'" + cbt_config::post_build_command + "\'");
+            return 1;
+        }
+    }
+
+    return 0;
 }
