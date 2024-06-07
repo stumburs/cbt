@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <functional>
 #include <filesystem>
+#include <sstream>
 
 cbt::Result cbt::load_args(int argc, char *argv[])
 {
@@ -59,6 +60,20 @@ cbt::Result cbt::process_args()
 
 void cbt::log(LogType log_type, const std::string &text)
 {
+    if (cbt_config::timestamp_output)
+    {
+        auto current_timestamp = []()
+        {
+            auto now = std::chrono::system_clock::now();
+            auto in_time_t = std::chrono::system_clock::to_time_t(now);
+            std::ostringstream ss;
+            ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+            return ss.str();
+        };
+
+        std::cout << "[" << current_timestamp() << "] ";
+    }
+
     switch (log_type)
     {
     case cbt::LogType::SUCCESS:
