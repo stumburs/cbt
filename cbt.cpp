@@ -289,15 +289,15 @@ int main(int argc, char *argv[])
             cbt::log(cbt::LogType::ERROR, "Failed to execute program: " + cbt_config::target);
             return 1;
         }
-    }
 
-    // Run post-run command
-    if (!cbt_config::post_run_command.empty())
-    {
-        if (cbt::run_cmd(cbt_config::post_run_command) != cbt::Result::SUCCESS)
+        // Run post-run command
+        if (!cbt_config::post_run_command.empty())
         {
-            cbt::log(cbt::LogType::ERROR, "Failed to execute post-run command: \'" + cbt_config::post_run_command + "\'");
-            return 1;
+            if (cbt::run_cmd(cbt_config::post_run_command) != cbt::Result::SUCCESS)
+            {
+                cbt::log(cbt::LogType::ERROR, "Failed to execute post-run command: \'" + cbt_config::post_run_command + "\'");
+                return 1;
+            }
         }
     }
 
