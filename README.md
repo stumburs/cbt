@@ -54,11 +54,12 @@ cbt is a basic build tool/system for C/C++ where you only require a C++ compiler
 
 ## Flags
 
-| Flag    | Description                            | Example       |
-| ------- | -------------------------------------- | ------------- |
-| `-help` | Displays help information              | `./cbt -help` |
-| `-cmd`  | Displays the constructed build command | `./cbt -cmd`  |
-| `-r`    | Runs the project after compiling       | `./cbt -r`    |
+| Flag     | Description                            | Example        |
+| -------- | -------------------------------------- | -------------- |
+| `-help`  | Displays help information              | `./cbt -help`  |
+| `-clean` | Removes cbt_config::target executable  | `./cbt -clean` |
+| `-cmd`   | Displays the constructed build command | `./cbt -cmd`   |
+| `-r`     | Runs the project after compiling       | `./cbt -r`     |
 
 ## Contributing
 
