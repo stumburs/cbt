@@ -44,6 +44,9 @@ cbt::Result cbt::process_args()
         case cbt::Hashes::show_compile_command:
             cbt::Flags::show_compile_command = true;
             break;
+        case cbt::Hashes::clean:
+            cbt::Flags::clean = true;
+            break;
 
         default:
             cbt::log(cbt::LogType::WARNING, "Unknown Flag: " + arg);
@@ -201,6 +204,16 @@ std::vector<std::string> cbt::get_all_src_files(const std::vector<std::string> &
     return str_paths;
 }
 
+cbt::Result cbt::clean()
+{
+    if (std::filesystem::remove(cbt_config::target))
+    {
+        cbt::log(cbt::LogType::SUCCESS, "Removed \'" + cbt_config::target + "\'");
+        return cbt::Result::SUCCESS;
+    }
+    return cbt::Result::FAIL;
+}
+
 int main(int argc, char *argv[])
 {
     if (cbt::load_args(argc, argv) != cbt::Result::SUCCESS)
@@ -218,6 +231,16 @@ int main(int argc, char *argv[])
     if (cbt::Flags::help)
     {
         cbt::show_help();
+        return 0;
+    }
+
+    if (cbt::Flags::clean)
+    {
+        if (cbt::clean() != cbt::Result::SUCCESS)
+        {
+            cbt::log(cbt::LogType::ERROR, "Failed to remove \'" + cbt_config::target + "\'");
+            return 1;
+        }
         return 0;
     }
 

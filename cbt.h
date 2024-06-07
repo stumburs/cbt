@@ -27,6 +27,7 @@ namespace cbt
         bool help = false;
         bool run = false;
         bool show_compile_command = false;
+        bool clean = false;
     }
 
     constexpr size_t hash_djb2a(const std::string_view sv)
@@ -44,6 +45,7 @@ namespace cbt
         constexpr size_t help = hash_djb2a("-help");
         constexpr size_t run = hash_djb2a("-r");
         constexpr size_t show_compile_command = hash_djb2a("-cmd");
+        constexpr size_t clean = hash_djb2a("-clean");
     }
 
     std::string compile_command = "";
@@ -58,6 +60,7 @@ namespace cbt
     std::string create_compile_command();
     Result run(const std::string &path);
     std::vector<std::string> get_all_src_files(const std::vector<std::string> &directories);
+    Result clean();
 
     // Helper functions
     std::string add_space_if_not_empty(const std::string &str)
