@@ -18,6 +18,7 @@ namespace cbt_config
     bool console_colors = true;       // Enable console output colors (not supported on all terminals)
     bool run_after_compiling = false; // Automatically run program after compiling
     bool timestamp_output = false;    // Add timestamps to cbt::Log messages
+    bool time = false;                // Logs time it took to build and execute (displays only after executing)
 
     // Custom commands
     std::string pre_build_command = "";  // Custom command to run before build

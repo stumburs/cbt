@@ -2,6 +2,7 @@
 #include "cbt_config.h"
 #include <deque>
 #include <functional>
+#include <chrono>
 
 namespace cbt
 {
@@ -50,6 +51,9 @@ namespace cbt
 
     std::string compile_command = "";
 
+    // Timing
+    std::chrono::time_point<std::chrono::high_resolution_clock> build_start, build_end, run_start, run_end;
+
     Result load_args(int argc, char *argv[]);
     Result process_args();
     void log(LogType log_type, const std::string &text);
@@ -61,6 +65,7 @@ namespace cbt
     Result run_cmd(const std::string &path);
     std::vector<std::string> get_all_src_files(const std::vector<std::string> &directories);
     Result clean();
+    void show_time();
 
     // Helper functions
     std::string add_space_if_not_empty(const std::string &str)

@@ -229,6 +229,15 @@ cbt::Result cbt::clean()
     return cbt::Result::FAIL;
 }
 
+void cbt::show_time()
+{
+    auto build_time = std::chrono::duration_cast<std::chrono::milliseconds>(cbt::build_end - cbt::build_start);
+    auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(cbt::run_end - cbt::run_start);
+
+    cbt::log(cbt::LogType::INFO, "Build: " + std::to_string(build_time.count()) + "ms");
+    cbt::log(cbt::LogType::INFO, "Execution: " + std::to_string(run_time.count()) + "ms");
+}
+
 int main(int argc, char *argv[])
 {
     if (cbt::load_args(argc, argv) != cbt::Result::SUCCESS)
@@ -279,10 +288,20 @@ int main(int argc, char *argv[])
 
     cbt::log(cbt::LogType::INFO, "Compiling...");
 
+    if (cbt_config::time)
+    {
+        cbt::build_start = std::chrono::high_resolution_clock::now();
+    }
+
     if (cbt::build() != cbt::Result::SUCCESS)
     {
         cbt::log(cbt::LogType::ERROR, "Something went wrong!");
         return 1;
+    }
+
+    if (cbt_config::time)
+    {
+        cbt::build_end = std::chrono::high_resolution_clock::now();
     }
 
     // Run post-build command
@@ -299,10 +318,20 @@ int main(int argc, char *argv[])
 
     if (cbt::Flags::run || cbt_config::run_after_compiling)
     {
+        if (cbt_config::time)
+        {
+            cbt::run_start = std::chrono::high_resolution_clock::now();
+        }
         if (cbt::run_cmd(cbt_config::target) != cbt::Result::SUCCESS)
         {
             cbt::log(cbt::LogType::ERROR, "Failed to execute program: " + cbt_config::target);
             return 1;
+        }
+
+        if (cbt_config::time)
+        {
+            cbt::run_end = std::chrono::high_resolution_clock::now();
+            cbt::show_time();
         }
 
         // Run post-run command
